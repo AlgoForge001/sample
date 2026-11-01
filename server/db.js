@@ -3,32 +3,41 @@ const path = require('path');
 const Database = require('better-sqlite3');
 
 // Resolve database file path
-// Production Docker default: /app/data/notes.db
-// Local default: ../data/notes.db relative to server directory
+// Production default in Docker/Coolify: /app/data/notes.db
+// Local dev default: ../data/notes.db
 const dbPath = process.env.DB_PATH || path.join(__dirname, '../data/notes.db');
 const dbDir = path.dirname(dbPath);
 
-// Ensure the directory exists
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+// Ensure the target directory exists
+try {
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+} catch (err) {
+  console.error(`[Database] Failed to create database directory at ${dbDir}:`, err.message);
 }
 
-const db = new Database(dbPath);
+let db;
+try {
+  db = new Database(dbPath);
 
-// Enable WAL mode for better concurrency and durability
-db.pragma('journal_mode = WAL');
+  // Enable WAL (Write-Ahead Logging) mode for improved concurrency and durability
+  db.pragma('journal_mode = WAL');
 
-// Initialize schema
-db.exec(`
-  CREATE TABLE IF NOT EXISTS notes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT DEFAULT '',
-    content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+  // Initialize schema
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS notes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT DEFAULT '',
+      content TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
-console.log(`[Database] SQLite connected at: ${dbPath}`);
+  console.log(`[Database] SQLite connected at: ${dbPath}`);
+} catch (err) {
+  console.error(`[Database Error] Failed to initialize SQLite database at ${dbPath}:`, err.message);
+  throw err;
+}
 
 module.exports = db;
-
