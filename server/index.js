@@ -111,3 +111,4 @@ if (fs.existsSync(clientDistPath)) {
 app.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
 });
+

@@ -31,3 +31,4 @@ db.exec(`
 console.log(`[Database] SQLite connected at: ${dbPath}`);
 
 module.exports = db;
+

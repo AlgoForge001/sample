@@ -154,3 +154,4 @@ To ensure notes are never lost during redeployments or container restarts:
 ├── README.md               # Documentation & setup instructions
 └── agent.md                # Project requirements specification
 ```
+
