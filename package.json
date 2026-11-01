@@ -1,0 +1,33 @@
+{
+  "name": "my-notes",
+  "version": "1.0.0",
+  "description": "A simple, beginner-friendly full-stack note-taking web application",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev:server": "node --watch server/index.js",
+    "dev:client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm --prefix client run build",
+    "test": "node tests/api.test.js",
+    "install:all": "npm install && npm --prefix client install"
+  },
+  "keywords": [
+    "notes",
+    "fullstack",
+    "react",
+    "vite",
+    "express",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
